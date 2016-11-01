@@ -40,7 +40,7 @@ public class CreateFloor : MonoBehaviour {
             {
                 //oneLine[i]にはいっているものがCreateblockNumと同じだったらtrueそれ以外が入っていたらfalse
                 bool isInt = int.TryParse(oneLine[i], out CreateblockNum);
-                if(isInt)
+                if(isInt && CreateblockNum == 1)
                 {
                     //正常に読み込まれたらブロックを生成。
                     obj = Instantiate(block, pos, Quaternion.identity) as GameObject;
