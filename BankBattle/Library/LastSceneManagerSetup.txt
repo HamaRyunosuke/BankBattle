@@ -1,4 +1,0 @@
-sceneSetups:
-- path: Assets/Scenes/Work_Hamaguchi.unity
-  isLoaded: 1
-  isActive: 1
