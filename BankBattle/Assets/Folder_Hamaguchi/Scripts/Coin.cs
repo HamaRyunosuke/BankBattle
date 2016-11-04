@@ -11,6 +11,8 @@ public class Coin : MonoBehaviour {
 
     GameObject takePlayer;
 
+    float time;
+
 
 
     // Use this for initialization
@@ -37,7 +39,8 @@ public class Coin : MonoBehaviour {
 
                 break;
             case coinState.TAKEN:
-                this.transform.position = new Vector3(Mathf.Lerp(takePlayer.transform.position.x, this.transform.position.x, 3), 0, 0);
+                time += Time.deltaTime * 0.2f;
+                this.transform.position = new Vector3(Mathf.Lerp(takePlayer.transform.position.x, this.transform.position.x, time), 0, 0);
                 break;
             default:
                 break;
