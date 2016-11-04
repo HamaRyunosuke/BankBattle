@@ -9,8 +9,9 @@ public class CreateFloor : MonoBehaviour {
     //読み込むテキストファイルを入れておくもの。
     public TextAsset textAsset;
 
-    Vector3 createPos;
 
+    Vector3 createPos;
+    //空白をあけるための座標を求める。
     public Vector3 spaceScale;
 
     // Use this for initialization
@@ -31,11 +32,13 @@ public class CreateFloor : MonoBehaviour {
 
         GameObject obj = null;
 
+        //ブロックのサイズを取ってくる。
+        Vector3 blockScale = block.transform.lossyScale;
+
         foreach (string c in stArrayData)
         {
-            //cでもってきた一行のデータを「,」で区切ってひとつずつ読むようにする。
-            string[] oneLine = c.Split(',');
-            Debug.Log(oneLine.Length);
+            //cでもってきた一行のデータを「.」で区切ってひとつずつ読むようにする。
+            string[] oneLine = c.Split('.');
             for(int i = 0; i < oneLine.Length; ++i)
             {
                 //oneLine[i]にはいっているものがCreateblockNumと同じだったらtrueそれ以外が入っていたらfalse
@@ -46,7 +49,7 @@ public class CreateFloor : MonoBehaviour {
                     obj = Instantiate(block, pos, Quaternion.identity) as GameObject;
                 }
                 //生成してもしなくてもx軸をずらして次に進む。
-                pos.x += obj.transform.lossyScale.x;
+                pos.x += blockScale.x;
             }
             //z軸をずらす。
             pos.z += spaceScale.z;
