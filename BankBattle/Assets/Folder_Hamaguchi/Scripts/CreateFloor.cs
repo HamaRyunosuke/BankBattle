@@ -47,6 +47,7 @@ public class CreateFloor : MonoBehaviour {
                 {
                     //正常に読み込まれたらブロックを生成。
                     obj = Instantiate(block, pos, Quaternion.identity) as GameObject;
+                    obj.transform.parent = transform;
                 }
                 //生成してもしなくてもx軸をずらして次に進む。
                 pos.x += blockScale.x;

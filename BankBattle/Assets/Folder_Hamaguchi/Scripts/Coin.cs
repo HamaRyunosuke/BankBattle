@@ -49,7 +49,7 @@ public class Coin : MonoBehaviour {
             case coinState.NONE:
                 //ステージに置かれてる状態のときに自分のpositionをとっておく。
                 myPos = this.transform.position;
-                endPos = new Vector3(transform.position.x, transform.position.y + upAmount, transform.position.z);
+                endPos = new Vector3(this.transform.position.x, this.transform.position.y + upAmount, this.transform.position.z);
                 testPos = Vector3.Lerp(myPos, endPos, 0.5f);
 
                 //回転させる処理。rotSpeedはエンジン上で変更可能。
@@ -57,10 +57,13 @@ public class Coin : MonoBehaviour {
                 break;
             case coinState.TAKEN:
                 time += Time.deltaTime * upSpeed;
-                var curvePos = upCurve.Evaluate(time);
+                float curvePos = upCurve.Evaluate(time);
                 this.transform.position = Vector3.Lerp(myPos, testPos, curvePos);
+
+                //コインが上がりきったら次のSTATEに行くようにする。
                 if(this.transform.position.y == testPos.y)
                 {
+                    this.GetComponent<Rigidbody>().useGravity = false;
                     state = coinState.APPROACH;
                     time = 0;
                 }
@@ -68,9 +71,10 @@ public class Coin : MonoBehaviour {
                 break;
             case coinState.APPROACH:
                 //上昇しきったあと、プレイヤーに吸い寄せられていくとき。
+                this.GetComponent<MeshCollider>().isTrigger = true;
                 time += Time.deltaTime * approSpeed;
                 float approCurvePos = approCurve.Evaluate(time);
-                this.transform.position = Vector3.Lerp(this.transform.position, this.transform.position, approCurvePos);
+                this.transform.position = Vector3.Lerp(this.transform.position, takePlayer.transform.position/*ここには取得したプレイヤーのポジションが入る*/, approCurvePos);
                 break;
             default:
                 break;
@@ -81,7 +85,6 @@ public class Coin : MonoBehaviour {
     {
         if(col.gameObject.tag == "Player")
         {
-            Debug.Log("ok");
             state = coinState.TAKEN;
             takePlayer = col.gameObject;
         }
