@@ -20,8 +20,7 @@ public class Coin : MonoBehaviour {
     [SerializeField]
     float approSpeed; // 吸い寄せられる速度。
 
-
-    public int rotSpeed;
+    public GameObject getCoinEffect;
     public enum coinState {
         NONE = 0,
         APPROACH,
@@ -42,7 +41,6 @@ public class Coin : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        takePlayer = GameObject.Find("Capsule");
 	}
 	
 	// Update is called once per frame
@@ -62,11 +60,21 @@ public class Coin : MonoBehaviour {
                 break;
             case coinState.APPROACH:
                 //上昇しきったあと、プレイヤーに吸い寄せられていくとき。
-                //this.GetComponent<MeshCollider>().isTrigger = true;
-                Vector3 approachPoint = new Vector3(takePlayer.transform.position.x, takePlayer.transform.position.y + 0.7f, takePlayer.transform.position.z);
+                this.GetComponent<MeshCollider>().isTrigger = true;
+                Vector3 approachPoint = new Vector3(takePlayer.transform.position.x, takePlayer.transform.position.y + 0.2f, takePlayer.transform.position.z);
                 time += Time.deltaTime * approSpeed;
                 float approCurvePos = approCurve.Evaluate(time);
                 this.transform.position = Vector3.Lerp(this.transform.position, approachPoint, approCurvePos);
+                //コイン（自分）の座標がコインを取得したプレイヤーの座標とほとんど同じになったらコインを消すようにする。
+                //2点間の距離が一定以内であれば
+                if(Vector3.Distance(this.transform.position, approachPoint) < 0.15f)
+                {
+                    //ここで得点に入れたり取得したときのエフェクトを入れたりする。
+                    //コインを取得したときにエフェクトを出す。(getCoinEffectはpublic)
+                    Instantiate(getCoinEffect, this.transform.position, Quaternion.identity);
+                    //自分自身を消す。
+                    Destroy(this.gameObject);
+                }
                 break;
 #if false
 
@@ -97,10 +105,13 @@ public class Coin : MonoBehaviour {
     //コインをプレイヤーが取得した時の処理。
     void OnTriggerEnter(Collider col)
     {
+        //stateがNONEのときにPlayerタグを持ったプレイヤーがあたったらstateを変更する。
         if (col.gameObject.tag == "Player" && state == coinState.NONE)
         {
             //stateを変える。
             state = coinState.APPROACH;
+            //重力は必要ないのでfalseにしておく。
+            this.GetComponent<Rigidbody>().useGravity = false;
             //コインをとったプレイヤーが誰かを取得。
             takePlayer = col.gameObject;
             //取得者が重複するのを防ぐため、Triggerを削除する。
