@@ -71,7 +71,7 @@ public class Coin : MonoBehaviour {
                 {
                     //ここで得点に入れたり取得したときのエフェクトを入れたりする。
                     //コインを取得したときにエフェクトを出す。(getCoinEffectはpublic)
-                    Instantiate(getCoinEffect, this.transform.position, Quaternion.identity);
+                    Instantiate(getCoinEffect, approachPoint, Quaternion.identity);
                     //自分自身を消す。
                     Destroy(this.gameObject);
                 }
