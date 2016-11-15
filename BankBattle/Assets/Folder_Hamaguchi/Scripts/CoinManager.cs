@@ -7,13 +7,12 @@ public class CoinManager : MonoBehaviour {
 
     //各コインの情報
     [SerializeField]
-    int[] coinMax; // 各コインの枚数上限を決める。
-    [SerializeField]
     int[] coinValue; // コインの価値を付加する。
+    [SerializeField]
+    float createCoinRange; // コインの作り出される範囲の設定。
+
     public GameObject[] createCoins; // 作り出すコイン一覧。6種類。
 
-    public GameObject[] Coins;
-    int count;
 
 
 
@@ -25,65 +24,44 @@ public class CoinManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        //if (count <= 150)
-        //{
-        //    Instantiate(Coins[0], transform.position, Quaternion.identity);
-        //    count++;
-        //}
-
-
-        //int rand = Random.Range(0, 100);
-        //if(rand <= 80)
-        //{
-        //    Instantiate(Coins[0], transform.position, Quaternion.identity);
-        //} else if(rand <= 97)
-        //{
-        //    Instantiate(Coins[1], transform.position, Quaternion.identity);
-        //} else
-        //{
-        //    Instantiate(Coins[2], transform.position, Quaternion.identity);
-        //}
 
     }
 
-    void CoinGenerate(int coinNo)
+    void CoinGenerate(int coinNo, float createRate)
     {
         int createCount = 0;
-        while (totalCoinAmount > 0 && createCount < coinMax[coinNo])
+        // 出したい金額の合計が今から生成する分の値を持っている間まわす。
+        while (totalCoinAmount >= coinValue[coinNo] && createCount < 30)
         {
-            Instantiate(createCoins[coinNo], transform.position, Quaternion.identity);
-            totalCoinAmount -= coinValue[coinNo];
-            createCount++;
+            if (totalCoinAmount / coinValue[coinNo] >= createRate)
+            {
+                //毎回同じポジションにならないようにオブジェクトの±２の範囲内で生み出す。
+                Vector3 createRandPos = new Vector3(Random.Range(this.transform.position.x - createCoinRange, this.transform.position.x + createCoinRange),
+                Random.Range(this.transform.position.y, this.transform.position.y + createCoinRange), Random.Range(this.transform.position.z - createCoinRange, this.transform.position.z + createCoinRange));
+                Instantiate(createCoins[coinNo], createRandPos, Quaternion.Euler(90, 0, 0));
+                //生成したコインの価値だけtotalCoinAmountから差し引く。
+                totalCoinAmount -= coinValue[coinNo];
+                createCount++;
+            } else
+            {
+                break;
+            }
         }
         createCount = 0;
+
     }
 
     void CreateCoin()
     {
-        int createCount = 0;
-        //金の大きいコインを生成。
-        while (totalCoinAmount > 0 && createCount < coinMax[0])
-        {
-            Instantiate(createCoins[0], transform.position, Quaternion.identity);
-            totalCoinAmount -= coinValue[0];
-            createCount++;
-        }
-        createCount = 0;
-        CoinGenerate(0);
-        //銀大は７５の価値がある。一旦実験として金大を作って差し引かれたtotalCoinAmountの分をすべて銀大にしてみる。
-        while(totalCoinAmount > 0 && createCount < coinMax[1])
-        {
-            Instantiate(createCoins[1], transform.position, Quaternion.identity);
-            totalCoinAmount -= coinValue[1];
-            createCount++;
-        }
-        createCount = 0;
-        while (totalCoinAmount > 0 && createCount < coinMax[2])
-        {
-            Instantiate(createCoins[2], transform.position, Quaternion.identity);
-            totalCoinAmount -= coinValue[2];
-            createCount++;
-        }
-        createCount = 0;
+        //0.LGold 1.LSilver 2.SGold 3.LBronze 4.SSilver 5.SBronze
+        //金大メダルの確率は1パーセント
+        //第一引数はコイン番号。第二引数はコインを生成する際どれぐらいの確率で出るかの数値。
+        //金大と銅小はこれで決定…中間の調整をどうするか
+        CoinGenerate(0, 10);
+        CoinGenerate(1, 15);
+        CoinGenerate(2, 10);
+        CoinGenerate(3, 5);
+        CoinGenerate(4, 3);
+        CoinGenerate(5, 1);
     }
 }
