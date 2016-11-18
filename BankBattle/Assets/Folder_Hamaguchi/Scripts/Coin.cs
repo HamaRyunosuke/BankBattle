@@ -24,12 +24,14 @@ public class Coin : MonoBehaviour {
     public enum coinState {
         NONE = 0,
         APPROACH,
+        TEST,
 
         TAKEN,
     }
     public coinState state = coinState.NONE;
 
     GameObject takePlayer; // コインを取得したプレイヤーを入れる変数。
+    GameObject fallPlayer;
     float time; //コインが移動するときに使うTime.deltatimeを入れる変数。
 
     Vector3 myPos; //自分の座標
@@ -75,6 +77,11 @@ public class Coin : MonoBehaviour {
                     //自分自身を消す。
                     Destroy(this.gameObject);
                 }
+                break;
+            case coinState.TEST:
+                Vector3 targetPos = GameObject.Find("CoinManager").transform.position;
+                Vector3 fallPlayerPos = GameObject.Find("");
+                this.transform.position = Vector3.Slerp();
                 break;
 #if false
 

@@ -9,9 +9,10 @@ public class TestMove : MonoBehaviour {
     public bool testFlg = true;
 
     public float InjectionPower;
+    public GameObject thisObj;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
 
     }
 	
@@ -23,7 +24,7 @@ public class TestMove : MonoBehaviour {
         //2で割った数ぶんコインを出す。
         //出すコインは高価なものから出してよい。
         //もし出す金額よりも今出しているコインの方が価値があれば1こ下の価値の低いものに変更する。
-        if(this.transform.position.y <= -1.5f && testFlg)
+        if(this.transform.position.y <= -0.5f && testFlg)
         {
             DisCharge();
         }
@@ -42,7 +43,10 @@ public class TestMove : MonoBehaviour {
             while (loseScore >= coinManager.GetComponent<CoinManager>().coinValue[i])
             {
                 Vector3 targetVec = (coinManager.transform.position - this.transform.position).normalized;
-                GameObject insCoin = Instantiate(coinManager.GetComponent<CoinManager>().createCoins[i], new Vector3(transform.position.x, transform.position.y + 4, transform.position.z), Quaternion.Euler(90, 0, 0)) as GameObject;
+                GameObject insCoin = Instantiate(coinManager.GetComponent<CoinManager>().createCoins[i], new Vector3(transform.position.x, transform.position.y + 3, transform.position.z), Quaternion.Euler(90, 0, 0)) as GameObject;
+                //落ちたプレイヤーからコインが出る時専用のStateを作り生成したコインのすべてのStateをそれにする。
+                thisObj = this.gameObject;
+                insCoin.GetComponent<Coin>().state = Coin.coinState.NONE;
                 insCoin.GetComponent<Rigidbody>().AddForce(targetVec * InjectionPower);
                 loseScore -= coinManager.GetComponent<CoinManager>().coinValue[i];
             }
