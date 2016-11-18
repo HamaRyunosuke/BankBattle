@@ -2,22 +2,18 @@
 using System.Collections;
 
 public class CoinManager : MonoBehaviour {
-    [SerializeField]
-    int totalCoinAmount; // 作り出すコインすべてをあわせた量(枚数ではなく価値)
+    [Range(0, 12000)]
+    public int totalCoinAmount; // 作り出すコインすべてをあわせた量(枚数ではなく価値)
 
     //各コインの情報
-    [SerializeField]
-    int[] coinValue; // コインの価値を付加する。
-    [SerializeField]
-    float createCoinRange; // コインの作り出される範囲の設定。
+    public int[] coinValue; // コインの価値を付加する。
 
     public GameObject[] createCoins; // 作り出すコイン一覧。6種類。
 
-
-
-
-	// Use this for initialization
-	void Start () {
+    [SerializeField]
+    float createCoinRange; // コインの作り出される範囲の設定。
+    // Use this for initialization
+    void Start () {
         CreateCoin();
 
     }
