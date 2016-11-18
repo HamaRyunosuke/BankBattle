@@ -24,7 +24,6 @@ public class Coin : MonoBehaviour {
     public enum coinState {
         NONE = 0,
         APPROACH,
-        TEST,
 
         TAKEN,
     }
@@ -78,11 +77,6 @@ public class Coin : MonoBehaviour {
                     Destroy(this.gameObject);
                 }
                 break;
-            case coinState.TEST:
-                Vector3 targetPos = GameObject.Find("CoinManager").transform.position;
-                Vector3 fallPlayerPos = GameObject.Find("");
-                this.transform.position = Vector3.Slerp();
-                break;
 #if false
 
             case coinState.TAKEN:
@@ -108,7 +102,6 @@ public class Coin : MonoBehaviour {
                 break;
         }
 	}
-
     //コインをプレイヤーが取得した時の処理。
     void OnTriggerEnter(Collider col)
     {
