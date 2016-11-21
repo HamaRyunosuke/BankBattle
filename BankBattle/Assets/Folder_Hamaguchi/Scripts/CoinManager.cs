@@ -6,12 +6,21 @@ public class CoinManager : MonoBehaviour {
     public int totalCoinAmount; // 作り出すコインすべてをあわせた量(枚数ではなく価値)
 
     //各コインの情報
-    public int[] coinValue; // コインの価値を付加する。
+   // public int[] coinValue; // コインの価値を付加する。
 
-    public GameObject[] createCoins; // 作り出すコイン一覧。6種類。
+    //public GameObject[] createCoins; // 作り出すコイン一覧。6種類。
+
+    //構造体として1つの配列に2つの情報を格納。
+    public Coins[] coins;
+    [System.Serializable]
+    public struct Coins
+    {
+        public GameObject model;
+        public int value;
+    }
 
     [SerializeField]
-    float createCoinRange; // コインの作り出される範囲の設定。
+    float createCoinRadius; // コインの作り出される範囲の設定。
     // Use this for initialization
     void Start () {
         CreateCoin();
@@ -20,23 +29,23 @@ public class CoinManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
+        
     }
 
     void CoinGenerate(int coinNo, float createRate)
     {
         int createCount = 0;
         // 出したい金額の合計が今から生成する分の値を持っている間まわす。
-        while (totalCoinAmount >= coinValue[coinNo] && createCount < 30)
+        while (totalCoinAmount >= coins[coinNo].value && createCount < 30)
         {
-            if (totalCoinAmount / coinValue[coinNo] >= createRate)
+            if (totalCoinAmount / coins[coinNo].value >= createRate)
             {
                 //毎回同じポジションにならないようにオブジェクトの±２の範囲内で生み出す。
-                Vector3 createRandPos = new Vector3(Random.Range(this.transform.position.x - createCoinRange, this.transform.position.x + createCoinRange),
-                Random.Range(this.transform.position.y, this.transform.position.y + createCoinRange), Random.Range(this.transform.position.z - createCoinRange, this.transform.position.z + createCoinRange));
-                Instantiate(createCoins[coinNo], createRandPos, Quaternion.Euler(90, 0, 0));
+                Vector3 createRandPos = new Vector3(Random.Range(this.transform.position.x - createCoinRadius, this.transform.position.x + createCoinRadius),
+                Random.Range(this.transform.position.y, this.transform.position.y + createCoinRadius), Random.Range(this.transform.position.z - createCoinRadius, this.transform.position.z + createCoinRadius));
+                Instantiate(coins[coinNo].model, createRandPos, Quaternion.Euler(90, 0, 0));
                 //生成したコインの価値だけtotalCoinAmountから差し引く。
-                totalCoinAmount -= coinValue[coinNo];
+                totalCoinAmount -= coins[coinNo].value;
                 createCount++;
             } else
             {

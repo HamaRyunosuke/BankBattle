@@ -8,6 +8,8 @@ public class TestMove : MonoBehaviour {
     public int myScore = 5000;
     public bool testFlg = true;
 
+    public bool isDead = false;
+
     public float InjectionPower;
 
     // Use this for initialization
@@ -17,38 +19,46 @@ public class TestMove : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        //試験的に上下左右のキーで動かしている。
         Move();
-        //ある一定のところまで落ちたら
-        //プレイヤーの今持っているポイント（金額）を取得。
-        //2で割った数ぶんコインを出す。
-        //出すコインは高価なものから出してよい。
-        //もし出す金額よりも今出しているコインの方が価値があれば1こ下の価値の低いものに変更する。
-        if(this.transform.position.y <= -0.5f && testFlg)
+
+        //ある一定の高さまで落ちたら死亡判定
+        if(this.transform.position.y <= -0.5f && !isDead)
         {
             DisCharge();
         }
 
     }
 
+
+
+    void OnTriggerEnter(Collider col)
+    {
+        if (col.gameObject.tag == "DeathZone" && !isDead)
+        {
+            DisCharge();
+        }
+    }
+
     void DisCharge()
     {
         //失う分のスコアの計算
-        testFlg = false;
+        isDead = true;
         int loseScore = myScore / 2;
         myScore = loseScore;
         GameObject coinManager = GameObject.Find("CoinManager");
-        for (int i = 0; i < coinManager.GetComponent<CoinManager>().coinValue.Length; i++)
+        for (int i = 0; i < coinManager.GetComponent<CoinManager>().coins.Length; i++)
         {
-            while (loseScore >= coinManager.GetComponent<CoinManager>().coinValue[i])
+            while (loseScore >= coinManager.GetComponent<CoinManager>().coins[i].value)
             {
-                Vector3 targetVec = (coinManager.transform.position - this.transform.position).normalized;
-                GameObject insCoin = Instantiate(coinManager.GetComponent<CoinManager>().createCoins[i], new Vector3(transform.position.x, transform.position.y + 3, transform.position.z), Quaternion.Euler(90, 0, 0)) as GameObject;
+                GameObject target = GameObject.Find("SpawnDirection");
+                Vector3 spawnDirection = (target.transform.position - this.transform.position).normalized;
+                GameObject insCoin = Instantiate(coinManager.GetComponent<CoinManager>().coins[i].model, new Vector3(transform.position.x, transform.position.y + 1.5f, transform.position.z), Quaternion.Euler(90, 0, 0)) as GameObject;
 
-                insCoin.GetComponent<Rigidbody>().AddForce(targetVec * InjectionPower);
-                loseScore -= coinManager.GetComponent<CoinManager>().coinValue[i];
+                insCoin.GetComponent<Rigidbody>().AddForce(spawnDirection * InjectionPower);
+                loseScore -= coinManager.GetComponent<CoinManager>().coins[i].value;
             }
         }
-        testFlg = true;
     }
 
     void Move()
@@ -75,4 +85,6 @@ public class TestMove : MonoBehaviour {
             this.transform.position = myPos;
         }
     }
+
+
 }

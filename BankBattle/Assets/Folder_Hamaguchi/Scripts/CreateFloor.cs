@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
 public class CreateFloor : MonoBehaviour {
 
     //ステージの床として生成するブロック。
