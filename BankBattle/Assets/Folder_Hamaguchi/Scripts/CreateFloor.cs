@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-
+//[ExecuteInEditMode]
 public class CreateFloor : MonoBehaviour {
 
     //ステージの床として生成するブロック。

@@ -23,10 +23,10 @@ public class TestMove : MonoBehaviour {
         Move();
 
         //ある一定の高さまで落ちたら死亡判定
-        if(this.transform.position.y <= -0.5f && !isDead)
-        {
-            DisCharge();
-        }
+        //if(this.transform.position.y <= -0.5f && !isDead)
+        //{
+        //    DisCharge();
+        //}
 
     }
 
@@ -36,7 +36,8 @@ public class TestMove : MonoBehaviour {
     {
         if (col.gameObject.tag == "DeathZone" && !isDead)
         {
-            DisCharge();
+            DisCharge(); // 自分の持っているポイントを半分にしてその半分をステージ上にばら撒く処理。
+            Destroy(this.gameObject); //自らを消去。
         }
     }
 

@@ -111,7 +111,7 @@ public class Coin : MonoBehaviour {
             //stateを変える。
             state = coinState.APPROACH;
             //重力は必要ないのでfalseにしておく。
-            this.GetComponent<Rigidbody>().useGravity = false;
+            this.gameObject.GetComponent<Rigidbody>().useGravity = false;
             //コインをとったプレイヤーが誰かを取得。
             takePlayer = col.gameObject;
             //取得者が重複するのを防ぐため、Triggerを削除する。

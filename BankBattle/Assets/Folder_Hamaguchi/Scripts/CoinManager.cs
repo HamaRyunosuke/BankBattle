@@ -43,7 +43,8 @@ public class CoinManager : MonoBehaviour {
                 //毎回同じポジションにならないようにオブジェクトの±２の範囲内で生み出す。
                 Vector3 createRandPos = new Vector3(Random.Range(this.transform.position.x - createCoinRadius, this.transform.position.x + createCoinRadius),
                 Random.Range(this.transform.position.y, this.transform.position.y + createCoinRadius), Random.Range(this.transform.position.z - createCoinRadius, this.transform.position.z + createCoinRadius));
-                Instantiate(coins[coinNo].model, createRandPos, Quaternion.Euler(90, 0, 0));
+                GameObject obj = Instantiate(coins[coinNo].model, createRandPos, Quaternion.Euler(90, 0, 0)) as GameObject;
+                obj.transform.parent = transform;
                 //生成したコインの価値だけtotalCoinAmountから差し引く。
                 totalCoinAmount -= coins[coinNo].value;
                 createCount++;
